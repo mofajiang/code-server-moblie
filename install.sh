@@ -473,10 +473,12 @@ install_mobile() {
   MOBILE_REPO="${MOBILE_REPO:-https://github.com/mofajiang/code-server-moblie.git}"
   MOBILE_BRANCH="${MOBILE_BRANCH:-260416-feat-optimize-mobile-pages}"
   MOBILE_INSTALL_DIR="${MOBILE_INSTALL_DIR:-$HOME/.local/lib/code-server-mobile}"
+  CACHE_DIR=$(echo_cache_dir)
   
   echoh "Repository: $MOBILE_REPO"
   echoh "Branch: $MOBILE_BRANCH"
   echoh "Install Directory: $MOBILE_INSTALL_DIR"
+  echoh "Cache Directory: $CACHE_DIR"
   echoh
   
   # Check if already installed
