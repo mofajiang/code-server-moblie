@@ -35,11 +35,13 @@
 
 ```bash
 # 预览安装过程
-curl -fsSL https://github.com/coder/code-server/raw/main/install.sh | sh -s -- --dry-run
+curl -fsSL https://raw.githubusercontent.com/mofajiang/code-server-moblie/260416-feat-optimize-mobile-pages/install.sh | sh -s -- --dry-run
 
 # 执行安装
-curl -fsSL https://github.com/coder/code-server/raw/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/mofajiang/code-server-moblie/260416-feat-optimize-mobile-pages/install.sh | sh
 ```
+
+> **注意**：以上命令使用当前分支的安装脚本，包含最新的移动端优化。
 
 ### 使用 Docker
 
@@ -166,21 +168,23 @@ Ctrl/Cmd + W          - 关闭编辑器
 ## 📝 分支信息
 
 - **分支名**: `260416-feat-optimize-mobile-pages`
-- **基于版本**: VS Code 1.116.0
+- **当前版本**: v4.97.0 + VS Code 1.116.0
 - **主要修改**:
   - `src/browser/pages/*.css` - 登录/错误页面优化
   - `lib/vscode/src/vs/workbench/browser/media/mobile.css` - VS Code 主界面移动端样式
+- **项目仓库**: https://github.com/mofajiang/code-server-moblie/tree/260416-feat-optimize-mobile-pages
 
 ## 🤝 贡献
 
-本分支基于官方的 [code-server](https://github.com/coder/code-server) 项目。
+本分支基于官方的 [code-server](https://github.com/coder/code-server) 项目进行移动端优化。
 
-如需报告问题或提出改进建议，请访问：
+如需报告移动端相关的问题或提出改进建议，请访问：
 
+- 本仓库 Issues: https://github.com/mofajiang/code-server-moblie/issues
 - 官方 Issues: https://github.com/coder/code-server/issues
 - 官方讨论：https://github.com/coder/code-server/discussions
 
-## 📚 更多资源
+## 🔗 更多资源
 
 - [官方文档](https://coder.com/docs/code-server)
 - [安装指南](https://coder.com/docs/code-server/latest/install)
@@ -191,4 +195,5 @@ Ctrl/Cmd + W          - 关闭编辑器
 ---
 
 **版本**: v4.97.0 (移动端优化分支)  
-**最后更新**: 2026-04-16
+**最后更新**: 2026-04-16  
+**当前分支**: [260416-feat-optimize-mobile-pages](https://github.com/mofajiang/code-server-moblie/tree/260416-feat-optimize-mobile-pages)
