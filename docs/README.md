@@ -31,19 +31,27 @@
 
 ## 🚀 快速开始
 
-### 使用安装脚本（推荐）
+### 方式一：使用官方安装脚本（带移动端优化）
 
 ```bash
 # 预览安装过程
 curl -fsSL https://raw.githubusercontent.com/mofajiang/code-server-moblie/260416-feat-optimize-mobile-pages/install.sh | sh -s -- --dry-run
 
-# 执行安装
-curl -fsSL https://raw.githubusercontent.com/mofajiang/code-server-moblie/260416-feat-optimize-mobile-pages/install.sh | sh
+# 执行安装（添加 --mobile 参数启用移动端优化）
+curl -fsSL https://raw.githubusercontent.com/mofajiang/code-server-moblie/260416-feat-optimize-mobile-pages/install.sh | sh -s -- --mobile
 ```
 
-> **注意**：以上命令使用当前分支的安装脚本，包含最新的移动端优化。
+> **注意**：`--mobile` 参数会自动安装本分支的移动端优化版本。
 
-### 使用 Docker
+### 方式二：使用专用移动端安装脚本（中文）
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/mofajiang/code-server-moblie/260416-feat-optimize-mobile-pages/install-mobile.sh | bash
+```
+
+> **推荐**：此脚本专门为中文用户优化，提供更清晰的安装提示和中文输出。
+
+### 方式三：手动安装
 
 ```bash
 docker run -it -p 127.0.0.1:8080:8080 \

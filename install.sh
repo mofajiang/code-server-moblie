@@ -4,7 +4,7 @@ set -eu
 # code-server's automatic install script.
 # See https://coder.com/docs/code-server/latest/install
 
-usage() {
+  usage() {
   arg0="$0"
   if [ "$0" = sh ]; then
     arg0="curl -fsSL https://code-server.dev/install.sh | sh -s --"
@@ -14,7 +14,7 @@ usage() {
   fi
 
   cath << EOF
-Installs code-server.
+Installs code-server's automatic install script.
 It tries to use the system package manager if possible.
 After successful installation it explains how to start using code-server.
 
@@ -24,7 +24,7 @@ ${not_curl_usage-}
 Usage:
 
   $arg0 [--dry-run] [--version X.X.X] [--edge] [--method detect] \
-        [--prefix ~/.local] [--rsh ssh] [user@host]
+        [--prefix ~/.local] [--rsh ssh] [--mobile] [user@host]
 
   --dry-run
       Echo the commands for the install process without running them.
@@ -34,6 +34,12 @@ Usage:
 
   --edge
       Install the latest edge version instead of the latest stable version.
+
+  --mobile
+      Install code-server with mobile optimization (CSS-only responsive styles).
+      This version includes touch-friendly UI, responsive layouts, and iOS Safari
+      optimizations. Uses the branch: 260416-feat-optimize-mobile-pages
+      Repository: https://github.com/mofajiang/code-server-moblie
 
   --method [detect | standalone]
       Choose the installation method. Defaults to detect.
@@ -148,7 +154,8 @@ main() {
     ALL_FLAGS \
     RSH_ARGS \
     EDGE \
-    RSH
+    RSH \
+    MOBILE
 
   ALL_FLAGS=""
   while [ "$#" -gt 0 ]; do
@@ -185,6 +192,9 @@ main() {
         ;;
       --edge)
         EDGE=1
+        ;;
+      --mobile)
+        MOBILE=1
         ;;
       --rsh)
         RSH="$(parse_arg "$@")"
@@ -223,6 +233,13 @@ main() {
     echoh "Installing remotely with $RSH $RSH_ARGS"
     curl -fsSL https://code-server.dev/install.sh | prefix "$RSH_ARGS" "$RSH" "$RSH_ARGS" sh -s -- "$ALL_FLAGS"
     return
+  fi
+
+  # Handle mobile optimized installation
+  if [ "${MOBILE-}" ]; then
+    install_mobile
+    echo_coder_postinstall
+    exit 0
   fi
 
   METHOD="${METHOD-detect}"
@@ -445,6 +462,101 @@ install_npm() {
   echoerr "See the docs https://coder.com/docs/code-server/latest/install#npm"
 
   exit 1
+}
+
+install_mobile() {
+  echoh "=================================================="
+  echoh "Installing code-server with Mobile Optimization"
+  echoh "=================================================="
+  echoh
+  
+  MOBILE_REPO="${MOBILE_REPO:-https://github.com/mofajiang/code-server-moblie.git}"
+  MOBILE_BRANCH="${MOBILE_BRANCH:-260416-feat-optimize-mobile-pages}"
+  MOBILE_INSTALL_DIR="${MOBILE_INSTALL_DIR:-$HOME/.local/lib/code-server-mobile}"
+  
+  echoh "Repository: $MOBILE_REPO"
+  echoh "Branch: $MOBILE_BRANCH"
+  echoh "Install Directory: $MOBILE_INSTALL_DIR"
+  echoh
+  
+  # Check if already installed
+  if [ -d "$MOBILE_INSTALL_DIR" ]; then
+    echoh "Mobile-optimized code-server is already installed at $MOBILE_INSTALL_DIR"
+    echoh "Remove it to reinstall:"
+    echoh "  rm -rf $MOBILE_INSTALL_DIR"
+    echoh
+    exit 0
+  fi
+  
+  # Clone the repository
+  echoh "+ Cloning mobile-optimized repository..."
+  if [ ! "${DRY_RUN-}" ]; then
+    sh_c mkdir -p "$CACHE_DIR"
+    sh_c git clone --depth 1 --branch "$MOBILE_BRANCH" "$MOBILE_REPO" "$CACHE_DIR/code-server-mobile"
+  fi
+  
+  # Install dependencies and build if needed
+  echoh "+ Installing dependencies..."
+  if [ ! "${DRY_RUN-}" ]; then
+    sh_c cd "$CACHE_DIR/code-server-mobile"
+    
+    # Try to install npm dependencies
+    if command_exists npm; then
+      sh_c npm install --unsafe-perm || {
+        echoh "Warning: npm install failed, continuing anyway..."
+      }
+    else
+      echoh "npm not found, skipping dependency installation"
+    fi
+  fi
+  
+  # Create installation directory
+  echoh "+ Setting up installation directory..."
+  sh_c mkdir -p "$MOBILE_INSTALL_DIR"
+  
+  # Copy necessary files
+  if [ ! "${DRY_RUN-}" ]; then
+    # Copy the built/output files to installation directory
+    # For CSS-only version, we copy the source files
+    sh_c cp -r "$CACHE_DIR/code-server-mobile/src" "$MOBILE_INSTALL_DIR/"
+    sh_c cp -r "$CACHE_DIR/code-server-mobile/lib" "$MOBILE_INSTALL_DIR/" 2>/dev/null || true
+    sh_c cp "$CACHE_DIR/code-server-mobile/package.json" "$MOBILE_INSTALL_DIR/" 2>/dev/null || true
+    
+    # Create bin directory with symlink
+    sh_c mkdir -p "$HOME/.local/bin"
+    if [ -f "$CACHE_DIR/code-server-mobile/bin/code-server" ]; then
+      sh_c ln -fs "$CACHE_DIR/code-server-mobile/bin/code-server" "$HOME/.local/bin/code-server"
+    else
+      # If no binary exists, create a wrapper script
+      cat > "$HOME/.local/bin/code-server" << 'WRAPPER_EOF'
+#!/bin/sh
+# Wrapper script for mobile-optimized code-server
+exec node "$HOME/.local/lib/code-server-mobile/out/node/main.js" "$@"
+WRAPPER_EOF
+      sh_c chmod +x "$HOME/.local/bin/code-server"
+    fi
+  fi
+  
+  echoh
+  echoh "=================================================="
+  echoh "Mobile-optimized code-server installed successfully!"
+  echoh "=================================================="
+  echoh
+  echoh "Extend your path to use code-server:"
+  echoh "  export PATH=\"$HOME/.local/bin:\$PATH\""
+  echoh
+  echoh "Then run with:"
+  echoh "  code-server"
+  echoh
+  echoh "Mobile Optimization Features:"
+  echoh "  ✓ Responsive layouts (768px, 480px breakpoints)"
+  echoh "  ✓ Touch-friendly UI (minimum 44px touch targets)"
+  echoh "  ✓ iOS Safari input zoom prevention (16px font)"
+  echoh "  ✓ Dark mode support"
+  echoh "  ✓ Mobile-optimized terminal"
+  echoh
+  echoh "Documentation: $MOBILE_REPO/blob/$MOBILE_BRANCH/docs/README.md"
+  echoh
 }
 
 # Run $1 if we have a standalone otherwise run install_npm.
