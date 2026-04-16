@@ -28,6 +28,73 @@ button {
   line-height: 1rem;
 }
 
+@media (max-width: 768px) {
+  html,
+  body,
+  #root {
+    overflow-x: hidden;
+  }
+
+  input,
+  button {
+    font-size: 16px;
+  }
+
+  .-button {
+    padding: 14px 16px;
+    width: 100%;
+  }
+
+  .center-container {
+    padding: 16px;
+  }
+
+  .card-box {
+    max-width: 100%;
+    margin: 0;
+    box-shadow: none;
+  }
+
+  .card-box > .header {
+    padding: 20px;
+  }
+
+  .card-box > .header > .main {
+    font-size: 1.25rem;
+  }
+
+  .card-box > .content {
+    padding: 24px 20px;
+  }
+
+  .card-box + .card-box {
+    margin-top: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .-button {
+    padding: 12px 14px;
+  }
+
+  .card-box > .header {
+    padding: 16px;
+  }
+
+  .card-box > .header > .main {
+    font-size: 1.125rem;
+  }
+
+  .card-box > .header > .sub {
+    font-size: 0.875rem;
+    margin-top: 8px;
+  }
+
+  .card-box > .content {
+    padding: 20px 16px;
+  }
+}
+
 .-button {
   background-color: rgb(87, 114, 245);
   background-color: light-dark(rgb(87, 114, 245), rgb(26, 86, 219));

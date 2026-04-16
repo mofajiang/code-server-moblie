@@ -4,6 +4,44 @@
   text-align: center;
 }
 
+@media (max-width: 768px) {
+  .error-display {
+    padding: 16px;
+  }
+
+  .error-display > .header {
+    font-size: 4rem;
+  }
+
+  .error-display > .body {
+    font-size: 1rem;
+  }
+
+  .error-display > .links {
+    margin-top: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .error-display {
+    padding: 12px;
+  }
+
+  .error-display > .header {
+    font-size: 3rem;
+  }
+
+  .error-display > .body {
+    font-size: 0.875rem;
+  }
+
+  .error-display > .links > .link {
+    font-size: 0.875rem;
+    padding: 10px 16px;
+    display: inline-block;
+  }
+}
+
 .error-display > .header {
   font-size: 6rem;
   margin: 0;

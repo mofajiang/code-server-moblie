@@ -15,12 +15,7 @@ body {
   display: flex;
   flex-direction: row;
   width: 100%;
-}
-
-@media (max-width: 600px) {
-  .login-form > .field {
-    flex-direction: column;
-  }
+  gap: 16px;
 }
 
 .login-form > .error {
@@ -55,10 +50,48 @@ body {
   margin-left: 20px;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+  body {
+    min-height: auto;
+  }
+
+  .login-form {
+    width: 100%;
+  }
+
+  .login-form > .field {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .login-form > .field > .password {
+    width: 100%;
+    padding: 14px;
+  }
+
   .login-form > .field > .submit {
-    margin-left: 0px;
+    margin-left: 0;
     margin-top: 16px;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-form > .field {
+    gap: 12px;
+  }
+
+  .login-form > .field > .password {
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  .login-form > .field > .submit {
+    padding: 12px 16px;
+  }
+
+  .card-box > .content {
+    padding: 16px;
   }
 }
 
